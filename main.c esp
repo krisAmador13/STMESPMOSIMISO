@@ -1,0 +1,37 @@
+#include <Arduino.h>
+#include <stdint.h>
+
+#define pot1 13  // Pin potenciómetro 1
+
+int mapeo = 0;
+char lect='0';
+
+void setup() {
+  Serial2.begin(115200); 
+  Serial.begin(115200);    // Comunicación Serial a través de UART0
+  pinMode(pot1, INPUT);     // Configurar pines como entrada
+}
+
+void loop() {
+  int adc1 = analogRead(pot1);
+        mapeo = map(adc1, 0, 4095, 0, 15);
+        Serial.print("El mapeo 1 es: ");
+        Serial.println(mapeo);
+  if( Serial2.available()>0){
+    Serial.println("Logrado");
+    delay(500);
+    lect=Serial2.read();
+    if(lect=='1'){
+      Serial.println("Enviado");
+        Serial2.write(mapeo);
+        delay(500);
+    }
+  }
+  else{
+    Serial.println("ERROR");
+    delay(200);
+  }
+
+  
+  
+}
